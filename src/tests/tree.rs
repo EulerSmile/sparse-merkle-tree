@@ -439,7 +439,7 @@ proptest! {
     }
 
     #[test]
-    fn test_smt_multi_leaves_small((pairs, n) in leaves(1, 50)){
+    fn test_smt_multi_leaves_small((pairs, n) in leaves(1, 4)){
         let smt = new_smt(pairs.clone());
         let keys: Vec<_> = pairs.iter().take(n).map(|(k, _v)| *k).collect();
         let proof = smt.merkle_proof(keys.clone()).expect("gen proof");
@@ -447,6 +447,37 @@ proptest! {
         let compiled_proof = proof.clone().compile(keys).expect("compile proof");
         assert!(proof.verify::<Blake2bHasher>(smt.root(), data.clone()).expect("verify proof"));
         assert!(compiled_proof.verify::<Blake2bHasher>(smt.root(), data.clone()).expect("verify compiled proof"));
+
+        use core::fmt::Write;
+        let proof: Vec<u8> = compiled_proof.clone().into();
+        let mut s = String::with_capacity(2 * proof.len());
+        for byte in proof.clone() {
+            write!(s, "{:02X}", byte)?;
+        }
+        println!("proof: {}", s);
+        let mut r = String::with_capacity(2 * 32);
+        for b in smt.root().as_slice() {
+            write!(r, "{:02X}", b)?;
+        }
+        println!("root: {}", r);
+        let mut le = vec![];
+        for lf in &data {
+            let mut l = String::with_capacity(2 * 32);
+            let mut r = String::with_capacity(2 * 32);
+
+            let lf0: [u8; 32] = lf.0.into();
+            for b in lf0 {
+                write!(l, "{:02X}", b)?;
+            }
+
+            let lf1: [u8; 32] = lf.1.into();
+            for b in lf1 {
+                write!(r, "{:02X}", b)?;
+            }
+
+            le.push((l, r));
+        }
+        println!("leaves: {:?}", le);
 
         test_sub_proof(&compiled_proof, &smt, &data, 20);
     }

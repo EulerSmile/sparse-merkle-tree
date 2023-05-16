@@ -10,8 +10,8 @@ pub struct Blake2bHasher(Blake2b);
 impl Default for Blake2bHasher {
     fn default() -> Self {
         let blake2b = Blake2bBuilder::new(BLAKE2B_LEN)
-            .personal(PERSONALIZATION)
-            .key(BLAKE2B_KEY)
+            // .personal(PERSONALIZATION)
+            // .key(BLAKE2B_KEY)
             .build();
         Blake2bHasher(blake2b)
     }
