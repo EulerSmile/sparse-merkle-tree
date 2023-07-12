@@ -319,18 +319,6 @@ fn test_smt_c_verify2() {
     }
 }
 
-// FIXME: uncomment this later
-// pub const FIXTURES_DIR: &str = "../deps/sparse-merkle-tree/fixtures";
-// #[test]
-// fn test_fixtures() {
-//     for i in 0..100 {
-//         let path = format!("{}/basic/case-{}.json", FIXTURES_DIR, i);
-//         let content = fs::read(&path).expect("read");
-//         let case: Case = serde_json::from_slice(&content).expect("parse json");
-//         run_test_case(case).expect("test case c impl");
-//         println!("pass {}", i);
-//     }
-// }
 
 proptest! {
     #[test]

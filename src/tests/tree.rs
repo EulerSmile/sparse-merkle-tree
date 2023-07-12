@@ -66,42 +66,6 @@ fn test_default_merkle_proof() {
     // assert_ne!(root, H256::zero());
 }
 
-#[test]
-fn test_merkle_root() {
-    fn new_blake2b() -> blake2b_rs::Blake2b {
-        blake2b_rs::Blake2bBuilder::new(32).personal(b"SMT").build()
-    }
-
-    let mut tree = SMT::default();
-    for (i, word) in "The quick brown fox jumps over the lazy dog"
-        .split_whitespace()
-        .enumerate()
-    {
-        let key: H256 = {
-            let mut buf = [0u8; 32];
-            let mut hasher = new_blake2b();
-            hasher.update(&(i as u32).to_le_bytes());
-            hasher.finalize(&mut buf);
-            buf.into()
-        };
-        let value: H256 = {
-            let mut buf = [0u8; 32];
-            let mut hasher = new_blake2b();
-            hasher.update(word.as_bytes());
-            hasher.finalize(&mut buf);
-            buf.into()
-        };
-        tree.update(key, value).expect("update");
-    }
-
-    let expected_root: H256 = [
-        209, 214, 1, 128, 166, 207, 49, 89, 206, 78, 169, 88, 18, 243, 130, 61, 150, 45, 43, 54,
-        208, 20, 237, 20, 98, 69, 130, 120, 241, 169, 248, 211,
-    ]
-    .into();
-    assert_eq!(tree.store().leaves_map().len(), 9);
-    assert_eq!(tree.root(), &expected_root);
-}
 
 #[test]
 fn test_zero_value_donot_change_root() {

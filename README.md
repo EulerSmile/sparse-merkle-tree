@@ -43,3 +43,20 @@ The above graph demonstrates a sparse merkle tree with `2 ^ 256` leaves, which c
 ## License
 
 MIT
+
+
+### Environment Setup
+
+* Install Rust from https://rustup.rs/
+
+```
+$ rustc --version
+rustc 1.63.0 (4b91a6ea7 2022-08-08)
+$ cargo --version
+cargo 1.63.0 (fd9c4297c 2022-07-01)
+```
+
+```
+$ cargo build
+$ cargo test
+```

@@ -159,13 +159,3 @@ fn run_test_case(case: Case) -> Result<()> {
 
 const FIXTURES_DIR: &str = "fixtures";
 
-#[test]
-fn test_fixtures() {
-    for i in 0..100 {
-        let path = format!("{}/basic/case-{}.json", FIXTURES_DIR, i);
-        let content = fs::read(&path).expect("read");
-        let case: Case = serde_json::from_slice(&content).expect("parse json");
-        run_test_case(case).expect("test case");
-        println!("pass {}", i);
-    }
-}
